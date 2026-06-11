@@ -1,4 +1,5 @@
-FROM nginx:alpine
-COPY index.html /usr/share/nginx/html/
+FROM debian:bullseye
+COPY script.sh /
+ENTRYPOINT ["/script.sh"]
 EXPOSE 80
 
