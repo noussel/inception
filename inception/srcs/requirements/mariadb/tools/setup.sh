@@ -11,7 +11,7 @@ mysqld_safe &
 
 sleep 5
 
-mysql -e "
+mysql -e  "
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 CREATE USER IF NOT EXISTS 'wpuser'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO 'wpuser'@'%';
