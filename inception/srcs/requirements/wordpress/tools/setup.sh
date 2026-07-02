@@ -39,7 +39,7 @@ cp -r wordpress/* /var/www/html/ #kanhet dakchi dyal wordpress f dossier dyal si
     #host = mariadb : connecte toi au service mariadb
 
     wp core install \
-        --url=$DOMAIN_NAME \
+        --url=https://$DOMAIN_NAME \
         --title=$WP_TITLE \
         --admin_user=$WP_ADMIN_USER \
         --admin_password=$WP_ADMIN_PASSWORD \

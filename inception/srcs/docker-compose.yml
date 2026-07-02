@@ -27,50 +27,50 @@ volumes:
 
 
 services :
-      #le conteneur doit etre nome par mariadb car dans wordpress contient --dbhost=mariadb mais je sais pas ce qu'il fait avec cet info
-      mariadb:
-        build :
-          context : ./requirements/mariadb #path a dockerfile de mariadb , docker va creer une image depuis dockerfile
-        env_file :
-          - .env #prendre les variable d'env depuis ce fichier
-        volumes :
-          - mariadb:/var/lib/mysql #ou est ce fichier et pourquoi il ne se suprime pas si je restarter le docker
-        networks:
-          - inception
-        restart : always
-        
+  #le conteneur doit etre nome par mariadb car dans wordpress contient --dbhost=mariadb mais je sais pas ce qu'il fait avec cet info
+  mariadb:
+    build :
+      context : ./requirements/mariadb #path a dockerfile de mariadb , docker va creer une image depuis dockerfile
+    env_file :
+      - .env #prendre les variable d'env depuis ce fichier
+    volumes :
+      - mariadb:/var/lib/mysql #ou est ce fichier et pourquoi il ne se suprime pas si je restarter le docker
+    networks:
+      - inception
+    restart : always
+    
 
-      wordpress:
-        build :
-          context: ./requirements/wordpress
-        env_file :
-          - .env
-        volumes :
-          - wordpress:/var/www/html
-        depends_on :
-          - mariadb  
-        networks:
-          - inception
-        restart : always
+  wordpress:
+    build :
+      context: ./requirements/wordpress
+    env_file :
+      - .env
+    volumes :
+      - wordpress:/var/www/html
+    depends_on :
+      - mariadb  
+    networks:
+      - inception
+    restart : always
 
-      nginx:
-        build :
-          context: ./requirements/nginx
-        env_file :
-          - .env
-        ports:
-          - "443:443" #conextion pc : container mais est ce que le pc represente browser /
-        volumes :
-          - wordpress:/var/www/html #3lach drnah ? 3lach bhalo bhal wordpress et 3lach nhtoh f had l path non pas un autre
-        depends_on :
-          - wordpress #3lach ?
-        networks:
-          - inception
-        restart : always
+  nginx:
+    build :
+      context: ./requirements/nginx
+    env_file :
+      - .env
+    ports:
+      - "443:443" #conextion pc : container mais est ce que le pc represente browser /
+    volumes :
+      - wordpress:/var/www/html #3lach drnah ? 3lach bhalo bhal wordpress et 3lach nhtoh f had l path non pas un autre
+    depends_on :
+      - wordpress #3lach ?
+    networks:
+      - inception
+    restart : always
 
 networks:
-  inception: #3lach network 3la bra 
-      driver: bridge
+    inception: #3lach network 3la bra 
+      name: inception
 
 
 
