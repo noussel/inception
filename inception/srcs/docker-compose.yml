@@ -33,8 +33,8 @@ services :
       - .env #prendre les variable d'env depuis ce fichier
     volumes :
       - mariadb:/var/lib/mysql #ou est ce fichier et pourquoi il ne se suprime pas si je restarter le docker
-    # networks:
-    #   - inception
+    networks:
+      - inception
     restart : always
     
 
@@ -47,6 +47,8 @@ services :
       - wordpress:/var/www/html
     depends_on :
       - mariadb  
+    networks:
+      - inception
     restart : always
 
   nginx:
@@ -60,10 +62,13 @@ services :
       - wordpress:/var/www/html #3lach drnah ? 3lach bhalo bhal wordpress et 3lach nhtoh f had l path non pas un autre
     depends_on :
       - wordpress #3lach ?
+    networks:
+      - inception
     restart : always
 
 networks:
-  - inception #3lach network 3la bra 
+    inception: #3lach network 3la bra 
+      driver: brige
 
 
 

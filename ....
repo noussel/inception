@@ -1,0 +1,310 @@
+#!/bin/bash
+# 1. démarrer MariaDB
+# 2. créer la base wordpress
+# 3. créer wpuser
+# 4. donner les privilèges
+# 5. arrêter MariaDB
+# 6. lancer mysqld
+
+
+
+echo "[mariadb] starting..."
+
+mysqld_safe &
+
+until mysqladmin ping -h 127.0.0.1 --silent; do
+    echo "Waiting MariaDB..."
+    sleep 1
+done
+
+echo "[mariadb] creating db..."
+
+mysql -e  "
+CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+CREATE USER IF NOT EXISTS 'wpuser'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO 'wpuser'@'%';
+FLUSH PRIVILEGES;
+"
+
+mysqladmin -u root shutdown
+
+exec mysqld
+
+#continue running mysqld in the foreground bach maywlich stoped hit script (main process) sala 
+
+# my.cnf
+#    |
+#    +--> kifach MariaDB kat9bel connexions
+
+# setup.sh
+#    |
+#    +--> ach ghadi ytsayeb f database
+
+# Dockerfile
+#    |
+#    +--> install MariaDB w yjib had les fichiers
+
+
+FROM debian:bullseye
+
+RUN apt update && apt install -y mariadb-server 
+
+COPY tools/script.sh /
+COPY conf/my.cnf /etc/mysql/conf.d/my.cnf
+#check if /etc/mysql/conf.d/my.cnf is the path in the machine 
+
+RUN chmod +x /script.sh
+
+ENTRYPOINT ["/script.sh"]
+
+
+server{
+    server_name nel-khad.42.fr;
+
+    listen 443 ssl;
+
+    ssl_certificate /etc/ssl/certs/server.crt;
+    ssl_certificate_key /etc/ssl/private/server.key;
+    
+    root /var/www/html;
+
+    index index.php index.html;#https://nel-khad.42.fr
+
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass wordpress:9000;
+    }
+
+}
+
+#! /bin/bash
+
+# créer dossiers SSL
+
+# créer certificat SSL
+
+# lancer nginx
+
+
+#nginx kay3ref l'emplacement de ces fichers par config file
+mkdir -p /etc/ssl/private
+mkdir -p /etc/ssl/certs
+
+#openssl : programme de securite 
+#req : creer une req d'une sertificat
+#-x509 : Self-signed certificate : sertica va etre formuler par moi non pas importee depuis l'internet
+#nodes : nginx maghayhatch un pasword pour acceder au key chaque demarage
+#nekey : create new 
+openssl req -x509 -nodes -days 365 \
+    -newkey rsa:2048 \
+    -keyout /etc/ssl/private/server.key \
+    -out /etc/ssl/certs/server.crt \
+    -subj "/C=MA/ST=Casablanca/L=Casablanca/O=42/OU=42/CN=$DOMAIN_NAME"
+
+exec nginx -g "daemon off;"
+
+
+FROM debian:bullseye
+
+RUN apt update && apt install -y nginx openssl
+
+COPY conf/nginx.conf /etc/nginx/sites-available/default
+#Nginx 3ando configuration par défaut.
+# Nta katbddlha b configuration dyalk.
+COPY tools/setup.sh /
+
+RUN chmod +x /setup.sh
+
+ENTRYPOINT ["/setup.sh"]
+
+
+wordpress --------------------------------------
+
+# installer php-fpm (not in the script because it should be installed at the creation of the image)
+# installer les extensions PHP nécessaires
+
+# télécharger WordPress
+# créer wp-config.php
+# lancer php-fpm
+
+mkdir -p /var/www/html #creation du fichier du site web 
+cd /var/www/html # Hit wp config create w wp core install khas-hom ykhdmo mn dak dossier li fih :
+#apres extraction depuis wordpress www/html doit contien ├── wp-admin├── wp-content├── wp-includes
+
+if [ ! -f wp-config.php ]; then
+
+wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+chmod +x wp-cli.phar
+
+mv wp-cli.phar /usr/local/bin/wp
+
+
+wget https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+
+cp -r wordpress/* /var/www/html/ #kanhet dakchi dyal wordpress f dossier dyal site 
+
+
+
+    while ! mysqladmin ping -h mariadb --silent; do
+        sleep 2
+    done
+
+    #creation d'un ficher wp-config.php contien : name ,user ...
+    wp config create \
+        --dbname=$MYSQL_DATABASE \
+        --dbuser=$MYSQL_USER \
+        --dbpass=$MYSQL_PASSWORD \
+        --dbhost=mariadb \
+        --allow-root #allow l'execution des commandes avec root user
+    #host = mariadb : connecte toi au service mariadb
+
+    wp core install \
+        --url=$DOMAIN_NAME \
+        --title=$WP_TITLE \
+        --admin_user=$WP_ADMIN_USER \
+        --admin_password=$WP_ADMIN_PASSWORD \
+        --admin_email=$WP_ADMIN_EMAIL \
+        --allow-root
+
+    wp user create \
+        $WP_USER \
+        $WP_USER_EMAIL \
+        --user_pass=$WP_USER_PASSWORD \
+        --role=author \
+        --allow-root
+fi
+
+exec php-fpm7.4 -F #exec : bdel had script lihwa main process l process akhr lihwa php-fpm
+# PHP-FPM howa li kayexecuti les fichiers PHP dyal WordPress.
+# Nginx kaysift lih les requêtes PHP.
+
+
+# 1. Install php-fpm
+# 2. Install php-mysql
+# 3. Install wget
+# 4. Copy www.conf
+# 5. Copy setup.sh
+# 6. chmod +x setup.sh
+# 7. ENTRYPOINT setup.sh
+
+FROM debian:bullseye
+
+# RUN apt update && apt install php-fpm php-mysql wget -y
+
+RUN apt update && apt install -y \
+    php-fpm \
+    php-mysql \
+    mariadb-client \
+    wget
+
+    #mariadb-client fih mysqladmin list3mlt f waiting loop 
+
+COPY tools/setup.sh /
+COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+
+ENTRYPOINT ["bash", "setup.sh"]
+
+
+docker compose -------------
+version : "3.5"
+# Docker Compose howa fichier kaygol l Docker :
+
+# Ch7al mn container khasni ncrei ?
+# Chno image aw Dockerfile dyal kol wa7ed ?
+# Kifach yconnectiw m3a ba3d ?
+# Chno volumes ?
+# Chno variables d'environnement ?
+# Chkon ybda lwel ?
+
+volumes:
+  wordpress:
+    driver: local #
+    driver_opts:
+      type: none #utiliser un dossier
+      device: /home/nel-khad/data/wordpress
+      o: bind #bind ce path avec ce volume
+
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/nel-khad/data/mariadb
+      o: bind
+
+
+services :
+  #le conteneur doit etre nome par mariadb car dans wordpress contient --dbhost=mariadb mais je sais pas ce qu'il fait avec cet info
+  mariadb:
+    build :
+      context : ./requirements/mariadb #path a dockerfile de mariadb , docker va creer une image depuis dockerfile
+    env_file :
+      - .env #prendre les variable d'env depuis ce fichier
+    volumes :
+      - mariadb:/var/lib/mysql #ou est ce fichier et pourquoi il ne se suprime pas si je restarter le docker
+    # networks:
+    #   - inception
+    restart : always
+    
+
+  wordpress:
+    build :
+      context: ./requirements/wordpress
+    env_file :
+      - .env
+    volumes :
+      - wordpress:/var/www/html
+    depends_on :
+      - mariadb  
+    restart : always
+
+  nginx:
+    build :
+      context: ./requirements/nginx
+    env_file :
+      - .env
+    ports:
+      - "443:443" #conextion pc : container mais est ce que le pc represente browser /
+    volumes :
+      - wordpress:/var/www/html #3lach drnah ? 3lach bhalo bhal wordpress et 3lach nhtoh f had l path non pas un autre
+    depends_on :
+      - wordpress #3lach ?
+    restart : always
+
+networks:
+  - inception #3lach network 3la bra 
+
+
+
+#   docker compose up
+#         |
+#         v
+# Build MariaDB
+#         |
+# Build WordPress
+#         |
+# Build Nginx
+#         |
+# Create network
+#         |
+# Create volumes
+#         |
+# Start MariaDB
+#         |
+# Start WordPress
+#         |
+# Start Nginx
+#         |
+# Browser --> HTTPS --> Nginx --> PHP-FPM --> MariaDB
+
+
+
+
+
