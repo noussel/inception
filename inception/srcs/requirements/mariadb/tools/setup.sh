@@ -7,7 +7,7 @@
 # 6. lancer mysqld
 
 
-if [ ! -d "/var/lib/mysql/mysql"]; then #initialiser /var/lib/mysql
+if [ ! -d "/var/lib/mysql/mysql"]; then #initialiser /var/lib/mysql par les tablaux de systeme qui disent au MD comment gerer data
     echo "[mariadb] initialzing data directory..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
 fi

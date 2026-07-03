@@ -68,7 +68,7 @@ services :
 
 networks:
     inception: #3lach network 3la bra 
-      driver: brige
+      name: inception
 
 
 
