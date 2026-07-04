@@ -57,3 +57,21 @@ fi
 exec php-fpm7.4 -F #exec : bdel had script lihwa main process l process akhr lihwa php-fpm
 # PHP-FPM howa li kayexecuti les fichiers PHP dyal WordPress.
 # Nginx kaysift lih les requêtes PHP.
+
+# /var/www/html/
+# ├── index.php              <- le point d'entrée principal du site
+# ├── wp-config.php          <- contient les identifiants de connexion à MariaDB
+# ├── wp-login.php           <- la page de connexion admin
+# ├── wp-load.php
+# ├── wp-admin/
+# │   ├── index.php          <- le tableau de bord admin
+# │   ├── edit.php
+# │   └── ... (des centaines de fichiers .php)
+# ├── wp-includes/
+# │   ├── functions.php      <- des fonctions PHP réutilisées partout
+# │   ├── class-wp.php
+# │   └── ... (le "moteur" de WordPress, en PHP)
+# └── wp-content/
+#     ├── themes/             <- l'apparence du site (fichiers .php aussi)
+#     ├── plugins/
+#     └── uploads/            <- images que tu uploades depuis l'admin
