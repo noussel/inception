@@ -1,4 +1,4 @@
-version : "3.5"
+# version : "3.5"
 # Docker Compose howa fichier kaygol l Docker :
 
 # Ch7al mn container khasni ncrei ?
@@ -9,19 +9,21 @@ version : "3.5"
 # Chkon ybda lwel ?
 
 volumes:
-  wordpress:
-    driver: local #
-    driver_opts:
-      type: none #utiliser un dossier
-      device: /home/nel-khad/data/wordpress
-      o: bind #bind ce path avec ce volume
+        wordpress:
+              name: wordpress
+              driver: local #
+              driver_opts:
+                    type: none #utiliser un dossier
+                    device: /home/nel-khad/data/wordpress
+                    o: bind #bind ce path avec ce volume
 
-  mariadb:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/nel-khad/data/mariadb
-      o: bind
+        mariadb:
+              name: mariadb
+              driver: local
+              driver_opts:
+                    type: none
+                    device: /home/nel-khad/data/mariadb
+                    o: bind
 
 
 services :

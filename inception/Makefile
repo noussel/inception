@@ -1,24 +1,24 @@
-COMPOSE = docker-compose -f ./srcs/docker-compose.yml
+COMPOSE = docker compose -f ./srcs/docker-compose.yml
 
 up:
-	@$(COMPOSE) up --build -d
+	$(COMPOSE) up --build -d #--b: reconstruire les image quand tu veus lancer le conteneur
 
 down:
-	@$(COMPOSE) down
+	$(COMPOSE) down
 
 stop:
-	@$(COMPOSE) stop
+	$(COMPOSE) stop
 
 start:
-	@$(COMPOSE) start
+	$(COMPOSE) start
 
 status:
-	@docker ps
+	docker ps
 
 clean:
-	@$(COMPOSE) down -v
+	$(COMPOSE) down -v
 
 fclean: clean
-	@docker system prune -af
+	docker system prune -af
 
 re: fclean up
