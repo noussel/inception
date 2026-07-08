@@ -9,4 +9,6 @@ COPY tools/setup.sh /
 
 RUN chmod +x /setup.sh
 
+EXPOSE 443
+
 ENTRYPOINT ["/setup.sh"]
