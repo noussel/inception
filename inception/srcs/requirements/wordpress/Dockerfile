@@ -15,7 +15,6 @@ RUN apt update && apt install -y \
     php-mysql \
     mariadb-client \
     wget \
-    curl \
     && rm -rf /var/lib/apt/lists/*
     #mariadb-client fih mysqladmin list3mlt f waiting loop 
 
