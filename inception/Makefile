@@ -19,6 +19,6 @@ clean:
 	$(COMPOSE) down -v
 
 fclean: clean
-	docker system prune -af
+	docker system prune -af 
 
 re: fclean up

@@ -70,7 +70,7 @@ services :
 
 networks:
     inception: #3lach network 3la bra 
-      name: inception
+    
 
 # volumes:
 #   wordpress:
