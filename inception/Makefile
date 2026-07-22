@@ -1,6 +1,8 @@
 COMPOSE = docker compose -f ./srcs/docker-compose.yml
 
 up:
+	@mkdir -p /home/nel-khad/data/wordpress
+	@mkdir -p /home/nel-khad/data/mariadb
 	$(COMPOSE) up --build -d #--b: reconstruire les image quand tu veus lancer le conteneur
 
 down:
@@ -19,6 +21,6 @@ clean:
 	$(COMPOSE) down -v
 
 fclean: clean
-	docker system prune -af
+	docker system prune -af 
 
 re: fclean up

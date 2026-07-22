@@ -9,21 +9,21 @@
 # Chkon ybda lwel ?
 
 volumes:
-        wordpress:
-              name: wordpress
-              driver: local #
-              driver_opts:
-                    type: none #utiliser un dossier
-                    device: /home/nel-khad/data/wordpress
-                    o: bind #bind ce path avec ce volume
+  wordpress:
+    name: wordpress
+    driver: local #
+    driver_opts:
+      type: none #utiliser un dossier
+      device: /home/nel-khad/data/wordpress
+      o: bind #bind ce path avec ce volume
 
-        mariadb:
-              name: mariadb
-              driver: local
-              driver_opts:
-                    type: none
-                    device: /home/nel-khad/data/mariadb
-                    o: bind
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/nel-khad/data/mariadb
+      o: bind
 
 
 services :
@@ -42,7 +42,7 @@ services :
 
   wordpress:
     build :
-      context: ./requirements/wordpress
+      context: ./requirements/wordpress #build an image from dockerfile in this dir
     env_file :
       - .env
     volumes :
@@ -70,8 +70,7 @@ services :
 
 networks:
     inception: #3lach network 3la bra 
-      name: inception
-
+    
 
 
 #   docker compose up

@@ -23,9 +23,10 @@ tar -xzf latest.tar.gz
 
 cp -r wordpress/* /var/www/html/ #kanhet dakchi dyal wordpress f dossier dyal site 
 
+rm -rf wordpress latest.tar.gz
 
-
-    while ! mysqladmin ping -h mariadb --silent; do
+    # until mysql -h mariadb -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1" 2>/dev/null; do
+    until mysql -h mariadb -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1"; do
         sleep 2
     done
 
@@ -54,6 +55,7 @@ cp -r wordpress/* /var/www/html/ #kanhet dakchi dyal wordpress f dossier dyal si
         --allow-root
 fi
 
+mkdir -p /run/php
 exec php-fpm7.4 -F #exec : bdel had script lihwa main process l process akhr lihwa php-fpm
 # PHP-FPM howa li kayexecuti les fichiers PHP dyal WordPress.
 # Nginx kaysift lih les requêtes PHP.
