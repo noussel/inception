@@ -1,11 +1,4 @@
 #!/bin/bash
-# 1. démarrer MariaDB
-# 2. créer la base wordpress
-# 3. créer wpuser
-# 4. donner les privilèges
-# 5. arrêter MariaDB
-# 6. lancer mysqld
-
 
 if [ ! -d "/var/lib/mysql/mysql"]; then #initialiser /var/lib/mysql par les tablaux de systeme qui disent au MD comment gerer data
     echo "[mariadb] initialzing data directory..."
@@ -37,18 +30,4 @@ EOF
 
 mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
-exec mysqld_safe
-
-#continue running mysqld in the foreground bach maywlich stoped hit script (main process) sala 
-
-# my.cnf
-#    |
-#    +--> kifach MariaDB kat9bel connexions
-
-# setup.sh
-#    |
-#    +--> ach ghadi ytsayeb f database
-
-# Dockerfile
-#    |
-#    +--> install MariaDB w yjib had les fichiers
+exec mysqld_safe 

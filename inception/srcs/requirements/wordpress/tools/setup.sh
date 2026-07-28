@@ -1,4 +1,3 @@
-# installer php-fpm (not in the script because it should be installed at the creation of the image)
 # installer les extensions PHP nécessaires
 
 # télécharger WordPress
@@ -10,6 +9,8 @@ cd /var/www/html # Hit wp config create w wp core install khas-hom ykhdmo mn dak
 #apres extraction depuis wordpress www/html doit contien ├── wp-admin├── wp-content├── wp-includes
 
 if [ ! -f wp-config.php ]; then
+
+# cli = commande ligne interface
 
 wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
@@ -25,7 +26,6 @@ cp -r wordpress/* /var/www/html/ #kanhet dakchi dyal wordpress f dossier dyal si
 
 rm -rf wordpress latest.tar.gz
 
-    # until mysql -h mariadb -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1" 2>/dev/null; do
     until mysql -h mariadb -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1"; do
         sleep 2
     done
@@ -39,6 +39,7 @@ rm -rf wordpress latest.tar.gz
         --allow-root #allow l'execution des commandes avec root user
     #host = mariadb : connecte toi au service mariadb
 
+    # continuer l'instalaton ed wordpres
     wp core install \
         --url=https://$DOMAIN_NAME \
         --title=$WP_TITLE \

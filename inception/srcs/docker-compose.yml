@@ -8,14 +8,16 @@
 # Chno variables d'environnement ?
 # Chkon ybda lwel ?
 
+
+# pour specifier ou les volumes sont crees
 volumes:
   wordpress:
     name: wordpress
     driver: local #
     driver_opts:
-      type: none #utiliser un dossier
+      type: none #madirch volume f docker volumes folder 
       device: /home/nel-khad/data/wordpress
-      o: bind #bind ce path avec ce volume
+      o: bind #bind ce path avec ce volume 
 
   mariadb:
     name: mariadb

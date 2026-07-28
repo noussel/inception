@@ -20,6 +20,6 @@ openssl req -x509 -nodes -days 365 \
     -newkey rsa:2048 \
     -keyout /etc/ssl/private/server.key \
     -out /etc/ssl/certs/server.crt \
-    -subj "/C=MA/ST=Casablanca/L=Casablanca/O=42/OU=42/CN=$DOMAIN_NAME"
+    -subj "/C=MA/ST=Benguerir/L=Benguerir/O=42/OU=42/CN=$DOMAIN_NAME"
 
 exec nginx -g "daemon off;"
