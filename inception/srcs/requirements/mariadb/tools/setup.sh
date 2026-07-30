@@ -30,4 +30,5 @@ EOF
 
 mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
-exec mysqld_safe 
+# exec mysqld
+exec mariadbd --user=mysql
