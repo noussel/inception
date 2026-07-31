@@ -1,4 +1,4 @@
-COMPOSE = docker compose -f ./srcs/docker-compose.yml
+COMPOSE = docker-compose -f ./srcs/docker-compose.yml
 
 up:
 	@mkdir -p /home/nel-khad/data/wordpress
